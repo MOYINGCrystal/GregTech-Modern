@@ -7,15 +7,13 @@ import com.gregtechceu.gtceu.common.data.GTBlocks;
 import com.gregtechceu.gtceu.data.recipe.CustomTags;
 import com.gregtechceu.gtceu.data.recipe.VanillaRecipeHelper;
 import com.gregtechceu.gtceu.data.recipe.builder.GTRecipeBuilder;
-
+import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
-
-import com.tterrag.registrate.util.entry.ItemEntry;
 
 import java.util.function.Consumer;
 
@@ -536,6 +534,11 @@ public class MiscRecipeLoader {
                 .inputItems(rod, Steel)
                 .inputItems(ring, Steel, 2)
                 .outputItems(STEEL_MINECART_WHEELS)
+                .duration(60).EUt(20).save(provider);
+
+        DOG_COIN_MINER_RECIPES.recipeBuilder("dog_coin2")
+                .outputItems(COIN_DOGE)
+                .circuitMeta(1)
                 .duration(60).EUt(20).save(provider);
     }
 }

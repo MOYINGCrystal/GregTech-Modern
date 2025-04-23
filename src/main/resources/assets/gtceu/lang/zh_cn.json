@@ -5939,5 +5939,9 @@
     "tile.gtceu.petrified_foam.name":"石化建筑泡沫",
     "tile.gtceu.reinforced_foam.name":"强化建筑泡沫",
     "tile.gtceu.reinforced_stone.name":"防爆石",
-    "tile.gtceu.seal.name":"密封方块"
+    "tile.gtceu.seal.name":"密封方块",
+    "block.gtceu.lv_sale":"基础出售机§r",
+    "block.gtceu.mv_sale":"§b进阶出售机§r",
+    "block.gtceu.hv_sale":"§6进阶出售机 II§r",
+    "block.gtceu.ev_sale":"§5进阶出售机 III§r"
 }

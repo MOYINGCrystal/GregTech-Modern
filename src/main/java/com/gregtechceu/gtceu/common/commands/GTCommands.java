@@ -1,5 +1,6 @@
 package com.gregtechceu.gtceu.common.commands;
 
+import com.google.gson.JsonElement;
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.data.worldgen.GTOreDefinition;
 import com.gregtechceu.gtceu.api.data.worldgen.bedrockfluid.BedrockFluidDefinition;
@@ -16,9 +17,12 @@ import com.gregtechceu.gtceu.data.loader.BedrockFluidLoader;
 import com.gregtechceu.gtceu.data.loader.BedrockOreLoader;
 import com.gregtechceu.gtceu.data.loader.GTOreLoader;
 import com.gregtechceu.gtceu.data.pack.GTDynamicDataPack;
-
 import com.lowdragmc.lowdraglib.Platform;
-
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.JsonOps;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandRuntimeException;
 import net.minecraft.commands.CommandSourceStack;
@@ -28,21 +32,17 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.BulkSectionAccess;
 import net.minecraft.world.level.levelgen.structure.templatesystem.AlwaysTrueTest;
 
-import com.google.gson.JsonElement;
-import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.context.CommandContext;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.JsonOps;
-
 import java.nio.file.Path;
 
-import static net.minecraft.commands.Commands.*;
+import static net.minecraft.commands.Commands.argument;
+import static net.minecraft.commands.Commands.literal;
 
 /**
  * @author KilaBash
@@ -98,6 +98,21 @@ public class GTCommands {
                                         .then(argument("position", BlockPosArgument.blockPos())
                                                 .executes(context -> GTCommands.placeVein(context,
                                                         BlockPosArgument.getBlockPos(context, "position")))))));
+        // 在这里写指令逻辑
+        dispatcher.register(literal("mytest").executes(GTCommands::executeMyTest));
+    }
+
+    private static int executeMyTest(CommandContext<CommandSourceStack> context) {
+        CommandSourceStack source = context.getSource();
+        ServerPlayer player = source.getPlayer(); // 获取执行指令的玩家（可能为null）
+
+        if (player != null) {
+            player.sendSystemMessage(Component.literal("Hello, this is /mytest command!"));
+        } else {
+            source.sendSystemMessage(Component.literal("This command can only be run by a player."));
+        }
+
+        return Command.SINGLE_SUCCESS; // 返回执行结果（1=成功）
     }
 
     private static <T> int dumpDataRegistry(CommandContext<CommandSourceStack> context,
