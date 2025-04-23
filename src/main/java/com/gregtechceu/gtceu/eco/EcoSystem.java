@@ -2,12 +2,16 @@ package com.gregtechceu.gtceu.eco;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.gregtechceu.gtceu.GTCEu;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraftforge.event.server.ServerStartingEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
@@ -16,11 +20,12 @@ import java.util.Map;
 /**
  * 经济系统
  */
+@Mod.EventBusSubscriber(modid = GTCEu.MOD_ID)
 public class EcoSystem extends SavedData {
     private final Gson gson = new Gson();
 
-    public static EcoSystem get(ServerLevel level){
-        return level.getDataStorage().computeIfAbsent(EcoSystem::new,
+    public static EcoSystem get(){
+        return overworld.getDataStorage().computeIfAbsent(EcoSystem::new,
                 EcoSystem::new, "gtceu_ecosystem");
     }
 
@@ -35,6 +40,13 @@ public class EcoSystem extends SavedData {
         goodsInfoMap = gson.fromJson(data, type);
     }
 
+    private static ServerLevel overworld = null;
+
+    @SubscribeEvent
+    public static void onServerStart(ServerStartingEvent event) {
+        overworld = event.getServer().overworld();
+    }
+
     @Override
     public @NotNull CompoundTag save(CompoundTag compoundTag) {
         String json = gson.toJson(goodsInfoMap);
@@ -44,7 +56,7 @@ public class EcoSystem extends SavedData {
 
     private Map<Integer, GoodsInfo> goodsInfoMap = new Int2ObjectOpenHashMap<>();
 
-    private GoodsInfo getGoodsInfo(ItemLike item) {
+    public GoodsInfo getGoodsInfo(ItemLike item) {
         setDirty();
         int id = Item.getId(item.asItem());
         return goodsInfoMap.computeIfAbsent(id, key -> new GoodsInfo(id, priceSystem.getBasePrices(item)));

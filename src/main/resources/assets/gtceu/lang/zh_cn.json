@@ -5943,5 +5943,7 @@
     "block.gtceu.lv_sale":"基础出售机§r",
     "block.gtceu.mv_sale":"§b进阶出售机§r",
     "block.gtceu.hv_sale":"§6进阶出售机 II§r",
-    "block.gtceu.ev_sale":"§5进阶出售机 III§r"
+    "block.gtceu.ev_sale":"§5进阶出售机 III§r",
+    "block.gtceu.eco_machine":"经济系统查看机",
+    "gtceu.machine.eco.test1": "黄金价格：%s"
 }

@@ -19,6 +19,7 @@ import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 import com.gregtechceu.gtceu.data.lang.LangHandler;
 import com.gregtechceu.gtceu.eco.EcoSystem;
+import com.gregtechceu.gtceu.eco.GoodsInfo;
 import com.gregtechceu.gtceu.eco.PriceSystem;
 import com.lowdragmc.lowdraglib.gui.texture.ResourceTexture;
 import com.lowdragmc.lowdraglib.gui.widget.SlotWidget;
@@ -246,6 +247,8 @@ public class SaleMachine extends TieredEnergyMachine
         if (progress >= maxProgress) {
             List<ItemStack> stack = getItemStack();
             fillCache(stack, false);
+            GoodsInfo goodsInfo = getEcoSystem().getGoodsInfo(inHandler.getStackInSlot(0).getItem());
+            goodsInfo.setPrice(goodsInfo.getPrice() - 1);
 
             inHandler.storage.extractItem(0, 1, false);
             updateSaleUpdateSubscription();
@@ -256,10 +259,17 @@ public class SaleMachine extends TieredEnergyMachine
 
     private @NotNull List<ItemStack> getItemStack() {
         Item item = inHandler.getStackInSlot(0).getItem();
-        long prices = EcoSystem.get((ServerLevel)getLevel()).getPrice(item);
+        long prices = getEcoSystem().getPrice(item);
         return toCredits(prices);
     }
 
+    private @NotNull EcoSystem getEcoSystem() {
+        return EcoSystem.get();
+    }
+
+    /**
+     * 填充缓存
+     */
     private boolean fillCache(ItemStack stack, boolean simulate) {
         ItemStack residue = stack;
         for (int i = 0; i < cache.getSlots(); i++) {
@@ -274,6 +284,9 @@ public class SaleMachine extends TieredEnergyMachine
         return false;
     }
 
+    /**
+     * 填充缓存
+     */
     private boolean fillCache(List<ItemStack> stack, boolean simulate) {
         boolean success = true;
         for (ItemStack itemStack : stack) {

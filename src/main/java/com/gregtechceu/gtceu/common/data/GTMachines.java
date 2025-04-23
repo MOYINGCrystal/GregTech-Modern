@@ -43,6 +43,7 @@ import com.gregtechceu.gtceu.common.data.machines.GCyMMachines;
 import com.gregtechceu.gtceu.common.data.machines.GTAEMachines;
 import com.gregtechceu.gtceu.common.data.machines.GTCreateMachines;
 import com.gregtechceu.gtceu.common.data.machines.GTResearchMachines;
+import com.gregtechceu.gtceu.common.machine.EcoCheckMachine;
 import com.gregtechceu.gtceu.common.machine.electric.*;
 import com.gregtechceu.gtceu.common.machine.multiblock.electric.*;
 import com.gregtechceu.gtceu.common.machine.multiblock.generator.LargeCombustionEngineMachine;
@@ -2222,6 +2223,12 @@ public class GTMachines {
                         .tier(1));
         return Pair.of(lowTier, highTier);
     }
+
+    public static final MachineDefinition ECO = REGISTRATE.machine("eco_machine", EcoCheckMachine::new)
+            .rotationState(RotationState.ALL)
+//            .editableUI(EcoCheckMachine.EDITABLE_UI_CREATOR.apply(GTCEu.id("eco_machine")))
+            .tieredHullRenderer(GTCEu.id("block/machine/fisher_machine"))
+            .register();
 
     public static MachineDefinition[] registerTieredMachines(String name,
                                                              BiFunction<IMachineBlockEntity, Integer, MetaMachine> factory,
